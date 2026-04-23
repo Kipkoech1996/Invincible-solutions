@@ -1,0 +1,25 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Route /api/* → serverless functions
+[[redirects]]
+  from   = "/.netlify/functions/register"
+  to     = "/api/register"
+  status = 200
+
+[[redirects]]
+  from   = "/.netlify/functions/list-users"
+  to     = "/api/list-users"
+  status = 200
+
+[[redirects]]
+  from   = "/.netlify/functions/delete-user"
+  to     = "/api/delete-user"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+
+# Netlify Blobs — no extra config needed; it uses the site's built-in blob store.
+# The store name used in code is "users".

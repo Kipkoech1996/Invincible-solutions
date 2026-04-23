@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — Vortex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0a0f;
+      --paper: #f5f2eb;
+      --accent: #e8521a;
+      --accent2: #2563eb;
+      --muted: #9a9490;
+      --border: #d8d4cc;
+      --radius: 2px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: .5;
+    }
+
+    /* ── LAYOUT ── */
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 768px) {
+      .shell { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      background: var(--ink);
+      color: var(--paper);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-panel::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -80px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: .08;
+      pointer-events: none;
+    }
+
+    .brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: .06em;
+      color: var(--accent);
+    }
+
+    .panel-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 6vw, 5.5rem);
+      line-height: .95;
+      letter-spacing: -.01em;
+    }
+
+    .panel-headline em {
+      font-style: italic;
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 60%;
+      display: block;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .panel-sub {
+      font-weight: 300;
+      color: var(--muted);
+      font-size: .9rem;
+      max-width: 28ch;
+      margin-top: 1.2rem;
+      line-height: 1.7;
+    }
+
+    .testimonial {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 1.5rem;
+    }
+
+    .testimonial q {
+      font-style: italic;
+      font-size: .88rem;
+      color: rgba(245,242,235,.6);
+      line-height: 1.7;
+      display: block;
+      margin-bottom: .6rem;
+    }
+
+    .testimonial-author {
+      font-size: .78rem;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem clamp(2rem, 6vw, 5rem);
+    }
+
+    .form-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .form-header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: .03em;
+      line-height: 1;
+      margin-bottom: .5rem;
+    }
+
+    .form-header p {
+      color: var(--muted);
+      font-weight: 300;
+      font-size: .9rem;
+    }
+
+    .form-header p a {
+      color: var(--accent2);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── FORM ── */
+    .reg-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+
+    label {
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    input, select {
+      width: 100%;
+      padding: .7rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      appearance: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,82,26,.12);
+    }
+
+    input.error, select.error {
+      border-color: #dc2626;
+    }
+
+    .error-msg {
+      font-size: .72rem;
+      color: #dc2626;
+      display: none;
+    }
+
+    .error-msg.visible { display: block; }
+
+    /* password strength */
+    .pw-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: .3rem;
+    }
+
+    .pw-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 2px;
+      transition: width .3s, background .3s;
+    }
+
+    /* checkboxes */
+    .checkbox-field {
+      display: flex;
+      align-items: flex-start;
+      gap: .7rem;
+      cursor: pointer;
+    }
+
+    .checkbox-field input[type=checkbox] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      padding: 0;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: var(--accent);
+    }
+
+    .checkbox-field span {
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .checkbox-field span a {
+      color: var(--accent2);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* submit */
+    .btn-submit {
+      padding: .85rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: .12em;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+    }
+
+    .btn-submit:hover { background: #c9421a; }
+    .btn-submit:active { transform: scale(.98); }
+    .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── SUCCESS STATE ── */
+    .success-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .success-overlay.visible { display: flex; }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pop .4s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes pop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .success-overlay h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: .04em;
+    }
+
+    .success-overlay p {
+      color: var(--muted);
+      font-size: .9rem;
+      max-width: 30ch;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #dc2626;
+      color: #fff;
+      padding: .7rem 1.2rem;
+      border-radius: var(--radius);
+      font-size: .84rem;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .3s, transform .3s;
+      z-index: 1000;
+      max-width: 320px;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── ADMIN LINK ── */
+    .admin-link {
+      position: fixed;
+      top: 1.2rem;
+      right: 1.5rem;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: .35rem .7rem;
+      border-radius: var(--radius);
+      transition: color .2s, border-color .2s;
+      z-index: 100;
+    }
+
+    .admin-link:hover { color: var(--ink); border-color: var(--ink); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      color: var(--muted);
+      font-size: .75rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── STEP INDICATOR ── */
+    .step-indicator {
+      display: flex;
+      gap: .4rem;
+      margin-bottom: .5rem;
+    }
+
+    .step-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background .3s;
+    }
+
+    .step-dot.active { background: var(--accent); }
+  </style>
+</head>
+<body>
+
+<a href="/admin.html" class="admin-link">Admin →</a>
+
+<div class="shell">
+  <!-- LEFT -->
+  <aside class="left-panel">
+    <div class="brand">Vortex</div>
+    <div>
+      <p class="panel-headline">
+        JOIN THE<br>INNER<br>CIRCLE<br>
+        <em>— today</em>
+      </p>
+      <p class="panel-sub">
+        Access exclusive resources, early drops, and a community of builders who ship fast and think different.
+      </p>
+    </div>
+    <div class="testimonial">
+      <q>Signing up took 30 seconds. Getting value started immediately after.</q>
+      <span class="testimonial-author">— Amara K., Product Lead</span>
+    </div>
+  </aside>
+
+  <!-- RIGHT -->
+  <main class="right-panel">
+    <div id="formWrap">
+      <div class="form-header">
+        <div class="step-indicator">
+          <div class="step-dot active"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
+        </div>
+        <h1>Create Account</h1>
+        <p>Already a member? <a href="#">Sign in instead</a></p>
+      </div>
+
+      <form class="reg-form" id="regForm" novalidate>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Ada" autocomplete="given-name" />
+            <span class="error-msg" id="firstNameErr">Required</span>
+          </div>
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Lovelace" autocomplete="family-name" />
+            <span class="error-msg" id="lastNameErr">Required</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="ada@example.com" autocomplete="email" />
+          <span class="error-msg" id="emailErr">Enter a valid email</span>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone <span style="color:var(--muted);font-weight:300;font-size:.85em">(optional)</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="+254 700 000 000" autocomplete="tel" />
+        </div>
+
+        <div class="field">
+          <label for="role">Your Role</label>
+          <select id="role" name="role">
+            <option value="" disabled selected>Select your role…</option>
+            <option value="developer">Developer</option>
+            <option value="designer">Designer</option>
+            <option value="product">Product Manager</option>
+            <option value="founder">Founder / CEO</option>
+            <option value="marketer">Marketer</option>
+            <option value="student">Student</option>
+            <option value="other">Other</option>
+          </select>
+          <span class="error-msg" id="roleErr">Please select a role</span>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Min. 8 characters" autocomplete="new-password" />
+          <div class="pw-bar"><div class="pw-fill" id="pwFill"></div></div>
+          <span class="error-msg" id="passwordErr">Min. 8 characters</span>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repeat password" autocomplete="new-password" />
+          <span class="error-msg" id="confirmErr">Passwords don't match</span>
+        </div>
+
+        <div class="divider">Terms</div>
+
+        <label class="checkbox-field">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" />
+          <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+        </label>
+        <span class="error-msg" id="termsErr">You must agree to continue</span>
+
+        <label class="checkbox-field">
+          <input type="checkbox" id="newsletter" name="newsletter" checked />
+          <span>Send me product updates and tips (unsubscribe anytime)</span>
+        </label>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="submitLabel">Create My Account</span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-overlay" id="successOverlay">
+      <div class="success-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2>You're In!</h2>
+      <p>Welcome aboard. Check your inbox for a confirmation email.</p>
+      <button onclick="location.reload()" style="margin-top:.5rem;padding:.6rem 1.4rem;background:transparent;border:1.5px solid var(--border);border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;">Register another →</button>
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Password strength ──
+  const pwInput = document.getElementById('password');
+  const pwFill  = document.getElementById('pwFill');
+
+  pwInput.addEventListener('input', () => {
+    const v = pwInput.value;
+    let score = 0;
+    if (v.length >= 8)  score++;
+    if (v.length >= 12) score++;
+    if (/[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    const pct = (score / 5) * 100;
+    const colors = ['#dc2626','#f97316','#facc15','#4ade80','#16a34a'];
+    pwFill.style.width  = pct + '%';
+    pwFill.style.background = colors[Math.min(score - 1, 4)] || 'transparent';
+  });
+
+  // ── Toast ──
+  function showToast(msg, type = 'error') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = type === 'success' ? '#16a34a' : '#dc2626';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ── Form submit ──
+  document.getElementById('regForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    const firstName     = document.getElementById('firstName').value.trim();
+    const lastName      = document.getElementById('lastName').value.trim();
+    const email         = document.getElementById('email').value.trim();
+    const phone         = document.getElementById('phone').value.trim();
+    const role          = document.getElementById('role').value;
+    const password      = document.getElementById('password').value;
+    const confirmPw     = document.getElementById('confirmPassword').value;
+    const agreeTerms    = document.getElementById('agreeTerms').checked;
+    const newsletter    = document.getElementById('newsletter').checked;
+
+    let valid = true;
+
+    if (!firstName) { setError('firstName', 'firstNameErr'); valid = false; }
+    if (!lastName)  { setError('lastName',  'lastNameErr');  valid = false; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('email', 'emailErr'); valid = false;
+    }
+    if (!role)     { setError('role', 'roleErr'); valid = false; }
+    if (password.length < 8) { setError('password', 'passwordErr'); valid = false; }
+    if (password !== confirmPw) { setError('confirmPassword', 'confirmErr'); valid = false; }
+    if (!agreeTerms) {
+      document.getElementById('termsErr').classList.add('visible'); valid = false;
+    }
+
+    if (!valid) return;
+
+    // Show loading
+    const btn     = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    const label   = document.getElementById('submitLabel');
+    btn.disabled        = true;
+    spinner.style.display = 'block';
+    label.textContent   = 'Creating…';
+
+    try {
+      const res = await fetch('/.netlify/functions/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, phone, role, password, newsletter })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Registration failed');
+
+      // Success
+      document.getElementById('formWrap').style.display = 'none';
+      document.getElementById('successOverlay').classList.add('visible');
+    } catch (err) {
+      showToast(err.message);
+    } finally {
+      btn.disabled        = false;
+      spinner.style.display = 'none';
+      label.textContent   = 'Create My Account';
+    }
+  });
+
+  function setError(inputId, errId) {
+    document.getElementById(inputId).classList.add('error');
+    document.getElementById(errId).classList.add('visible');
+  }
+
+  function clearErrors() {
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('visible'));
+  }
+</script>
+</body>
+</html>

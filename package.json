@@ -1,0 +1,18 @@
+{
+  "name": "vortex-registration",
+  "version": "1.0.0",
+  "description": "Registration website using Netlify Blobs as database",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.0.0",
+    "bcryptjs": "^2.4.3",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
